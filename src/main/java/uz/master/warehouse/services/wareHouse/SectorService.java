@@ -14,6 +14,7 @@ import uz.master.warehouse.services.AbstractService;
 import uz.master.warehouse.services.GenericCrudService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SectorService extends AbstractService<SectorRepository, SectorMapper>
@@ -65,10 +66,11 @@ public class SectorService extends AbstractService<SectorRepository, SectorMappe
 
     @Override
     public DataDto<SectorDto> get(Long id) {
-        Sector sector = repository.findById(id).orElseThrow(() -> {
-            throw new UsernameNotFoundException("Not found");
-        });
-        return new DataDto<>(mapper.toDto(sector));
+        Optional<Sector> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            return new DataDto<>(mapper.toDto(optional.get()));
+        }
+        throw new UsernameNotFoundException("Not found");
     }
 
     @Override
