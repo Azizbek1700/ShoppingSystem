@@ -16,6 +16,7 @@ import uz.master.warehouse.services.AbstractService;
 import uz.master.warehouse.services.GenericCrudService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WareHouseService extends AbstractService<
@@ -62,10 +63,11 @@ public class WareHouseService extends AbstractService<
 
     @Override
     public DataDto<WareHouseDto> get(Long id) {
-        WareHouse found = repository.findById(id).orElseThrow(() -> {
+        Optional<WareHouse> optional = repository.findById(id);
+        if (!optional.isPresent()) {
             throw new NotFoundException("not found");
-        });
-        return new DataDto<>(mapper.toDto(found));
+        }
+        return new DataDto<>(mapper.toDto(optional.get()));
     }
 
     @Override
