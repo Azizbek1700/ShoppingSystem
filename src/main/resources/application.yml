@@ -51,6 +51,6 @@ api:
 service:
   prop:
     protocol: http
-    ip: localhost
+    ip: wholesale-system.herokuapp.com
     port: 8080
     url: boom.uz
