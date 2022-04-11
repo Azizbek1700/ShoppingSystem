@@ -17,8 +17,8 @@ import uz.master.warehouse.services.products.WareHouseProductsService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GroupProductsService extends AbstractService<GroupProductsRepository, GroupProductsMapper>
@@ -79,10 +79,11 @@ public class GroupProductsService extends AbstractService<GroupProductsRepositor
 
     @Override
     public DataDto<GroupProductsDto> get(Long id) {
-        GroupProducts groupProducts = repository.findById(id).orElseThrow(() -> {
-            throw new UsernameNotFoundException("Not found");
-        });
-        return new DataDto<>(mapper.toDto(groupProducts));
+        Optional<GroupProducts> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            return new DataDto<>(mapper.toDto(optional.get()));
+        }
+        throw new UsernameNotFoundException("Not found");
     }
 
     @Override
@@ -98,10 +99,10 @@ public class GroupProductsService extends AbstractService<GroupProductsRepositor
     }
 
 
-
-    public List<GroupProductsDto> getByCompany(String fromDate, String toDate,Long companyId) {
+    public List<GroupProductsDto> getByCompany(String fromDate, String toDate, Long companyId) {
         LocalDate from = LocalDate.parse(fromDate);
         LocalDate to = LocalDate.parse(toDate);
         List<GroupProducts> allByDateTimeDateBetweenAndCompanyName = repository.findAllByDateTimeDateBetweenAndCompanyName(from, to, companyId);
-        return mapper.toDto(allByDateTimeDateBetweenAndCompanyName);    }
+        return mapper.toDto(allByDateTimeDateBetweenAndCompanyName);
+    }
 }
