@@ -101,9 +101,10 @@ public class WareHouseProductsService extends AbstractService<WareHouseProductsR
 
 
     public void checkCount(Long productId, int count) {
-        repository.get(productId, count).orElseThrow(() -> {
+        Optional<WareHouseProducts> wareHouseProducts = repository.get(productId, count);
+        if (!wareHouseProducts.isPresent()) {
             throw new RuntimeException("uzr");
-        });
+        }
     }
 
     public void incomeProducts(InComeProducts list) {
