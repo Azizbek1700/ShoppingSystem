@@ -2,6 +2,7 @@ package uz.master.warehouse.services.organization;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import uz.master.warehouse.criteria.GenericCriteria;
 import uz.master.warehouse.dto.market.MarketCreateDto;
 import uz.master.warehouse.dto.market.MarketDto;
@@ -106,4 +107,20 @@ public class MarketService extends AbstractService<
     public DataDto<List<MarketDto>> getWithCriteria(GenericCriteria criteria) {
         return null;
     }
+
+    public void savePicture(MultipartFile[] file,Long marketId) {
+
+        for (MultipartFile multipartFile : file) {
+
+            String contentType = com.google.common.io.Files.getFileExtension(multipartFile.getOriginalFilename());
+            if ("jpg".equalsIgnoreCase(contentType) || "png".equalsIgnoreCase(contentType)) {
+                String store = fileStorageService.store(multipartFile);
+                repository.savePicture(store,marketId);
+            }
+            else {
+                throw new RuntimeException("picture content type error");
+            }
+        }
+    }
+
 }

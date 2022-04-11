@@ -45,7 +45,16 @@ public class FileStorageService {
     @SneakyThrows
     public String store(@NonNull MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
+
+        System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
+        System.out.println("file.getContentType() = " + file.getContentType());
+        System.out.println("file.getSize() = " + file.getSize());
+        System.out.println("file.getName() = " + file.getName());
+
+
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
+        System.out.println("extension = " + extension);
+
         String generatedName = "%s.%s".formatted(System.currentTimeMillis(), extension);
         Path rootPath = Paths.get(UNICORN_UPLOADS_B_4_LIB, generatedName);
         Files.copy(file.getInputStream(), rootPath, StandardCopyOption.REPLACE_EXISTING);
