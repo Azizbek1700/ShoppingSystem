@@ -157,10 +157,12 @@ public class AuthUserService implements UserDetailsService {
     }
 
     public DataDto<Long> update(AuthUpdateDto dto) {
-        AuthUser user = repository.findById(dto.getId()).orElseThrow(() -> {
+        Optional<AuthUser> optional = repository.findById(dto.getId());
+        if (!optional.isPresent()) {
             throw new UsernameNotFoundException("user not found");
-        });
+        }
 
+        AuthUser user = optional.get();
         user.setFullName(dto.getFullName());
         user.setUsername(dto.getUsername());
         user.setPhoneNumber(dto.getPhoneNumber());
