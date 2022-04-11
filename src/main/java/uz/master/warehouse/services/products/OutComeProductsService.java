@@ -72,9 +72,12 @@ public class OutComeProductsService extends AbstractService<OutComeProductsRepos
 
     @Override
     public DataDto<OutComeProductsDto> get(Long id) {
-        return new DataDto<>(mapper.toDto(repository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException("Not found");
-        })));
+        Optional<OutComeProducts> outComeProductsOptional = repository.findById(id);
+        if (outComeProductsOptional.isPresent()) {
+            return new DataDto<>(mapper.toDto(outComeProductsOptional.get()));
+
+        }
+        throw new RuntimeException("Not found");
     }
 
     @Override
@@ -84,14 +87,19 @@ public class OutComeProductsService extends AbstractService<OutComeProductsRepos
 
 
     public DataDto<Boolean> updateTaken(Long id) {
-        OutComeProducts found = repository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException("not Found");
-        });
-        boolean res = wareHouseProductsService.outcomeProducts(found);
-        if (!res) return new DataDto<>(Boolean.FALSE);
-        found.setTaken(true);
-        repository.save(found);
-        return new DataDto<>(Boolean.TRUE);
+        Optional<OutComeProducts> outComeProductsOptional = repository.findById(id);
+        if (outComeProductsOptional.isPresent()) {
+            OutComeProducts found = outComeProductsOptional.get();
+            boolean res = wareHouseProductsService.outcomeProducts(found);
+
+            if (!res) return new DataDto<>(Boolean.FALSE);
+            found.setTaken(true);
+            repository.save(found);
+            return new DataDto<>(Boolean.TRUE);
+        }
+        return new DataDto<>(Boolean.FALSE);
+
+
     }
 
     public DataDto<List<OutComeProductsDto>> getByDate(String date) {
