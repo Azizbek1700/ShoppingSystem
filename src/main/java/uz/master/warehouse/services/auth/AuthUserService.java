@@ -82,17 +82,22 @@ public class AuthUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AuthUser user = repository.findByUsernameAndDeletedFalse(username).orElseThrow(() -> {
+        Optional<AuthUser> optional = repository.findByUsernameAndDeletedFalse(username);
+        if (optional.isPresent()) {
+            AuthUser user = optional.get();
+            return User.builder().username(user.getUsername()).password(user.getPassword()).authorities(new SimpleGrantedAuthority(user.getRole().name())).build();
+        } else {
             throw new RuntimeException("user not found");
-        });
-        return User.builder().username(user.getUsername()).password(user.getPassword()).authorities(new SimpleGrantedAuthority(user.getRole().name())).build();
+        }
     }
 
     private User loadUser(String username) {
-        AuthUser user = repository.findByUsernameAndDeletedFalse(username).orElseThrow(() -> {
-            throw new RuntimeException("user not found");
-        });
-        return new User(user.getUsername(), user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())));
+        Optional<AuthUser> optional = repository.findByUsernameAndDeletedFalse(username);
+        if (optional.isPresent()) {
+            AuthUser user = optional.get();
+            return new User(user.getUsername(), user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())));
+        }
+        throw new RuntimeException("user not found");
 
     }
 
@@ -143,7 +148,7 @@ public class AuthUserService implements UserDetailsService {
     }
 
     public void delete(Long id, Long adminId) {
-        Optional<AuthUser> optional = repository.findById(id);
+        Optional<AuthUser> optional = repository.findById(adminId);
         if (optional.isPresent() && optional.get().getRole().equals(Role.ADMIN)) {
             repository.delete(id, UUID.randomUUID().toString());
         } else {
