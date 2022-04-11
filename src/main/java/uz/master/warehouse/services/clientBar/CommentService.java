@@ -46,7 +46,7 @@ public class CommentService extends AbstractService<CommentRepository, CommentMa
     public DataDto<Void> delete(Long id) {
 
         Optional<Comment> optional = repository.findByIdAndDeletedFalse(id,sessionUser.getOrgId());
-        if (optional.isEmpty()) {
+        if (!optional.isPresent()) {
             return new DataDto<>(new AppErrorDto("Comment not found", HttpStatus.NOT_FOUND));
         }
         repository.deleteComment(id);
@@ -57,7 +57,7 @@ public class CommentService extends AbstractService<CommentRepository, CommentMa
     @Override
     public DataDto<Long> update(CommentUpdateDto updateDto) {
         Optional<Comment> optionalComment = repository.findById(updateDto.getId());
-        if (optionalComment.isEmpty()) {
+        if (!optionalComment.isPresent()) {
             return new DataDto<>(new AppErrorDto(HttpStatus.OK, "Income Product not found", "product"));
         }
         Comment comment = mapper.fromUpdateDto(updateDto, optionalComment.get());
@@ -82,7 +82,7 @@ public class CommentService extends AbstractService<CommentRepository, CommentMa
     @Override
     public DataDto<CommentDto> get(Long id) {
         Optional<Comment> optional = repository.findByIdAndDeletedFalse(id, id);
-        if (optional.isEmpty()) {
+        if (!optional.isPresent()) {
             return new DataDto<>(new AppErrorDto(HttpStatus.NOT_FOUND, "Comment not found", "product"));
         }
         CommentDto commentDto = mapper.toDto(optional.get());

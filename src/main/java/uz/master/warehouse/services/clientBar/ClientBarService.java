@@ -19,7 +19,6 @@ import uz.master.warehouse.services.products.OutComeProductsService;
 import uz.master.warehouse.session.SessionUser;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -82,7 +81,7 @@ public class ClientBarService extends AbstractService<ClientBarRepository, Clien
     @Override
     public DataDto<List<ClientBarDto>> getWithCriteria(GenericCriteria criteria) {
         PageRequest pageRequest = PageRequest.of(criteria.getPage(), criteria.getSize());
-        return new DataDto<>(mapper.toDto(repository.findAllByDeletedFalse(pageRequest).stream().toList()));
+        return new DataDto<>(mapper.toDto(repository.findAllByDeletedFalse(pageRequest).getContent()));
     }
 
     public DataDto<List<ClientBarDto>> getByOrgId() {

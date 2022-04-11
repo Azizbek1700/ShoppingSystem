@@ -36,12 +36,14 @@ import uz.master.warehouse.session.SessionUser;
 import uz.master.warehouse.utils.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -90,7 +92,7 @@ public class AuthUserService implements UserDetailsService {
         AuthUser user = repository.findByUsernameAndDeletedFalse(username).orElseThrow(() -> {
             throw new RuntimeException("user not found");
         });
-        return new User(user.getUsername(), user.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole().name())));
+        return new User(user.getUsername(), user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())));
 
     }
 
@@ -141,8 +143,11 @@ public class AuthUserService implements UserDetailsService {
     }
 
     public void delete(Long id, Long adminId) {
-        if (repository.findById(adminId).orElseThrow().getRole().equals(Role.ADMIN)) {
+        Optional<AuthUser> optional = repository.findById(id);
+        if (optional.isPresent() && optional.get().getRole().equals(Role.ADMIN)) {
             repository.delete(id, UUID.randomUUID().toString());
+        } else {
+            throw new RuntimeException("Bad Request");
         }
     }
 
@@ -184,12 +189,10 @@ public class AuthUserService implements UserDetailsService {
         if ("jpg".equalsIgnoreCase(contentType) || "png".equalsIgnoreCase(contentType)) {
             String store = fileStorageService.store(picture);
             repository.updatePicture(store, username);
-        }
-        else {
+        } else {
             throw new RuntimeException("picture content type error");
         }
     }
-
 
 
 }

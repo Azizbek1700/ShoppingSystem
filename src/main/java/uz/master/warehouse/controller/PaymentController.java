@@ -74,7 +74,7 @@ public class PaymentController extends AbstractController {
 //        String toDate="2022-10-10";
         List<PaymentDto> byTimeBetween = service.getByTimeBetween(fromDate, toDate);
         ByteArrayInputStream bis = betweenDatePdfService.paymentReport(byTimeBetween, fromDate, toDate);
-        var headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         String now = LocalDateTime.now().toString();
         String filename = "payment_" + now + ".pdf";
         headers.add("Content-Disposition", "inline; filename=" + filename);

@@ -2,13 +2,12 @@ package uz.master.warehouse.services.products;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.master.warehouse.criteria.GenericCriteria;
 import uz.master.warehouse.dto.InComeProducts.InComeProductsCreateDto;
 import uz.master.warehouse.dto.InComeProducts.InComeProductsDto;
 import uz.master.warehouse.dto.InComeProducts.InComeProductsUpdateDto;
-import uz.master.warehouse.dto.firm.FirmDto;
+
 import uz.master.warehouse.dto.responce.AppErrorDto;
 import uz.master.warehouse.dto.responce.DataDto;
 import uz.master.warehouse.entity.products.InComeProducts;
@@ -55,7 +54,7 @@ public class InComeProductsService extends AbstractService<InComeProductsReposit
     @Override
     public DataDto<Long> update(InComeProductsUpdateDto updateDto) {
         Optional<InComeProducts> optional = repository.findByIncome(updateDto.getId());
-        if (optional.isEmpty()) {
+        if (!optional.isPresent()) {
 
             return new DataDto<>(new AppErrorDto(HttpStatus.OK, "Income Product not found", "product"));
         }
@@ -80,7 +79,7 @@ public class InComeProductsService extends AbstractService<InComeProductsReposit
     @Override
     public DataDto<InComeProductsDto> get(Long id) {
         Optional<InComeProducts> optional = repository.findById(id);
-        if (optional.isEmpty()) {
+        if (!optional.isPresent()) {
             return new DataDto<>(new AppErrorDto(HttpStatus.OK, "Income Product not found", "product"));
         }
         InComeProductsDto inComeProductsDto = mapper.toDto(optional.get());

@@ -50,7 +50,7 @@ public class OrganizationService extends AbstractService<
     @Override
     public DataDto<Long> create(OrganizationCreateDto createDto) {
         Optional<AuthUser> ownerById = userRepository.findById(createDto.getOwnerId());
-        if (ownerById.isEmpty()) {
+        if (!ownerById.isPresent()) {
             return new DataDto<>(new AppErrorDto("USER_NOT_FOUND", HttpStatus.BAD_REQUEST));
         }
         Organization organization = mapper.fromCreateDto(createDto);

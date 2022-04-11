@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uz.master.warehouse.properties.OpenApiProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -54,7 +55,9 @@ public class  OpenApiConfig {
     private List<SecurityRequirement> getSecurityRequirement() {
         SecurityRequirement securityRequirement = new SecurityRequirement();
         securityRequirement.addList(SECURITY_SCHEME_NAME);
-        return List.of(securityRequirement);
+        List<SecurityRequirement> list=new ArrayList<>();
+        list.add(securityRequirement);
+        return list;
     }
 
     private SecurityScheme getSecurityScheme() {

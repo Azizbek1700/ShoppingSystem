@@ -14,15 +14,15 @@ import uz.master.warehouse.mapper.products.OutComeProductsMapper;
 import uz.master.warehouse.repository.products.OutComeProductsRepository;
 import uz.master.warehouse.services.AbstractService;
 import uz.master.warehouse.services.GenericCrudService;
-import uz.master.warehouse.validator.products.OutComeProductsValidator;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OutComeProductsService extends AbstractService<OutComeProductsRepository, OutComeProductsMapper>
-        implements GenericCrudService<OutComeProducts, OutComeProductsDto, OutComeProductsCreateDto, OutComeProductsUpdateDto,GenericCriteria, Long> {
+        implements GenericCrudService<OutComeProducts, OutComeProductsDto, OutComeProductsCreateDto, OutComeProductsUpdateDto, GenericCriteria, Long> {
 
     private final WareHouseProductsService service;
     private final WareHouseProductsService wareHouseProductsService;
@@ -49,9 +49,13 @@ public class OutComeProductsService extends AbstractService<OutComeProductsRepos
 
     @Override
     public DataDto<Long> update(OutComeProductsUpdateDto updateDto) {
-        OutComeProducts products = repository.findById(updateDto.getId()).orElseThrow();
-        mapper.updateModel(updateDto, products);
-        return new DataDto<>(repository.save(products).getId());
+        Optional<OutComeProducts> optional = repository.findById(updateDto.getId());
+        if (optional.isPresent()) {
+            OutComeProducts products = optional.get();
+            mapper.updateModel(updateDto, products);
+            return new DataDto<>(repository.save(products).getId());
+        }
+        throw new RuntimeException("Bad Request");
     }
 
     @Override

@@ -118,7 +118,7 @@ public final class BetweenDatePdfService {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (BetweenDatePdfService) obj;
+        BetweenDatePdfService that = (BetweenDatePdfService) obj;
         return Objects.equals(this.organizationService, that.organizationService) &&
                 Objects.equals(this.companyService, that.companyService);
     }

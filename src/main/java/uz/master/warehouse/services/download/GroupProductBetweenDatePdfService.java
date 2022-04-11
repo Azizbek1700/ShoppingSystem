@@ -17,8 +17,6 @@ import uz.master.warehouse.services.products.InComeProductsService;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -174,12 +172,12 @@ public final class GroupProductBetweenDatePdfService {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (GroupProductBetweenDatePdfService) obj;
-        return Objects.equals(this.companyService, that.companyService) &&
-                Objects.equals(this.productService, that.productService) &&
-                Objects.equals(this.groupProductsService, that.groupProductsService) &&
-                Objects.equals(this.inComeProductsService, that.inComeProductsService) &&
-                Objects.equals(this.firmService, that.firmService);
+        GroupProductBetweenDatePdfService obj1 = (GroupProductBetweenDatePdfService) obj;
+        return Objects.equals(this.companyService, obj1.companyService) &&
+                Objects.equals(this.productService, obj1.productService) &&
+                Objects.equals(this.groupProductsService, obj1.groupProductsService) &&
+                Objects.equals(this.inComeProductsService, obj1.inComeProductsService) &&
+                Objects.equals(this.firmService, obj1.firmService);
     }
 
 
