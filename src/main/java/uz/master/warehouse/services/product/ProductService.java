@@ -20,10 +20,7 @@ import uz.master.warehouse.session.SessionUser;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProductService extends AbstractService<ProductRepository, ProductMapper> implements GenericCrudService<Product, ProductDto, ProductCreateDto, ProductUpdateDto, ProductCriteria, Long> {
@@ -81,10 +78,11 @@ public class ProductService extends AbstractService<ProductRepository, ProductMa
 
     @Override
     public DataDto<ProductDto> get(Long id) {
-        Product product = repository.findByIdAndOrgIdAndDeletedFalse(id, session.getOrgId()).orElseThrow(() -> {
-            throw new UsernameNotFoundException("Not found");
-        });
-        return new DataDto<>(mapper.toDto(product));
+        Optional<Product> productOptional = repository.findByIdAndOrgIdAndDeletedFalse(id, session.getOrgId());
+        if(productOptional.isPresent()){
+        return new DataDto<>(mapper.toDto(productOptional.get()));
+        }
+        throw new UsernameNotFoundException("Not found");
     }
 
     @Override
