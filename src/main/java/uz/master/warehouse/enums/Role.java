@@ -8,7 +8,7 @@ public enum Role {
     ADMIN,
     CASHIER,
     WAREHOUSEMAN,
-    SElLER;
+    SELLER;
 
     public Role checkRole(String role){
         for (Role value : values()) {

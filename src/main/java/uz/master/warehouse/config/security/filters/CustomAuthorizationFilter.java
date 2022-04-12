@@ -19,12 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * @author johnl
- * @since 2/24/2022
- */
-
-
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
 
