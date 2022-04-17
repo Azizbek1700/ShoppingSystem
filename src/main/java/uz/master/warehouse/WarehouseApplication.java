@@ -39,13 +39,13 @@ public class WarehouseApplication  {
 
 
 
-//    @Bean
-//    public void run() throws Exception {
-//        CommandLineRunner runner=(a)->{
-//            service.createUser(new AuthCreateDto(-1L,"Komilov","user","+998942740217","123", Role.ADMIN.name(),1L));
-//        };
-//        runner.run("s","b");
-//    }
+    @Bean
+    public void run() throws Exception {
+        CommandLineRunner runner=(a)->{
+            service.createUser(new AuthCreateDto(-1L,"Komilov","super_admin","+998942740217","123", Role.SUPER_ADMIN.name(),-1L));
+        };
+        runner.run("s","b");
+    }
 
 
 }
